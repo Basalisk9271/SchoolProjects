@@ -1,0 +1,123 @@
+README.txt
+
+Project 1: BINGO!
+
+Problem: Create a game that reads in a bingo.in file full of strings, add the strings to a 2-Dimensional 
+Array in Row Major Order and run a bingo game with it where the game successfully checks for row, 
+column, and diagonal bingo solutions based on the pseudo-random numbers in an ArrayList. Then give the 
+type of Bingo solution and how many random picks it took to reach it. Finally, present the card with the 
+chosed random numbers covered by "X"s 
+
+SAMPLE INPUT:
+12
+28
+31
+49
+66
+3
+26
+45
+53
+75
+10
+17
+33
+59
+67
+7
+19
+42
+55
+74
+2
+23
+37
+46
+70
+
+SAMPLE OUTPUT BASED ON INPUT:
+
+Your Bingo Card:
+
+B       I       N       G       O
+-       -       -       -       -
+12      28      31      49      66
+3       26      45      53      75
+10      17      33      59      67
+7       19      42      55      74
+2       23      37      46      70
+
+
+BINGO NUMBERS PICKED AT RANDOM FROM BIN : 
+52      24      58      60      36      35      22      15      57      50
+23      18      17      6       45      21      29      30      48      3
+7       47      28      72      11      13      26      31      55      33
+9       59      39      44      49      74      38      19      43
+
+YOU WIN WITH A VERTICAL BINGO AFTER 39 PICKS!
+
+B       I       N       G       O
+-       -       -       -       -
+12      X       X       X       66
+X       X       X       53      75
+10      X       X       X       67
+X       X       42      X       X
+2       X       37      46      70
+
+ALGORITHM: 
+    1)Read in the file
+    2)Turn Strings from file into Ints and pass them into the Int Array
+    3)Choose random number; add it to the ArrayList
+    4)Check each value in 2-D array to see if they match random value
+    5)Change values in array to 0 if they match random
+    6)Run a checkWin() method that checks to see if there is a win in a row/column/diagonal
+    7)If win, then break and return Win type; Else, run steps 3 - 6 until win is found
+    8)Print random number ArrayList, type of win, and completed card
+
+METHODS:
+
+main():
+    Run the playGame method 
+
+randomNums():
+    Pull a random number and add it to the ArrayList of random numbers. This method sets a random 
+    every time so that it can be compared in the checkCard method. Because this one only sets one 
+    random value per time called, it must be called in the loop in play game. This way, multiple 
+    random numbers are called 
+
+printRand():
+    This method prints the entire ArrayList of random numbers; also, properly format the printed 
+    numbers to display them in the output
+
+fillCard():
+    This method reads the input file and feeds it into the card[][] array. It also parses the 
+    strings into ints so that they are a valid object type for the int array
+
+printCard():
+    This method prints the card with the values that have been randomly chosen represented by "X"s 
+
+checkWin():
+    THis method runs through four seperate types of for loops to check for a sum of zero in the rows 
+    or columns, as well as the diagonals from corner to corner. After each loop, there are if statements 
+    where sum gets compared to 0 because if the sum is zero, then the entire set of values are each zeros. 
+    If al of the values are zeros in the sata set, it means that those numbers have been chosen and added 
+    to the Random number ArrayList
+
+checkCard():
+    This method checks to see if the current random number is in the card array. If it is, it changes 
+    the int to a zero to get it ready for the the checkWin card
+
+results():
+    This method runs an if-else statement that has two switch statements. Based on whether I need the 
+    win variable updated to "true" for a win or if I need the Strings responsible for informing the user 
+    of their BINGO win status, I can call the method with the argument 1 or an argument of any other 
+    number. This way, I can run the variable change switch statement in the loop and I can run the string 
+    display switch statement at the end of the program to display the win type. 
+
+playGame():
+    This method calls all of the other methods but it also feature a try-catch statement to catch the 
+    FileNotFoundException and display "Invalid file" in it's place when a file is not correctly found. 
+    This method also is one of the most important since it features a do-while loop that controls the 
+    flow of the game until the win variable it set to "true". Once win is set to "true", it breaks the 
+    do-while and prints the final outputs for the user. Thsi method plays the game entirely, so all I 
+    have to call in main() is a single line. 

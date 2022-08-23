@@ -1,0 +1,258 @@
+using namespace std;
+#include <string>
+#include <algorithm>
+#include <filesystem>
+#include <sstream>
+#include <ctype.h>
+#include <stdio.h>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+#include <cstdlib>
+#include "HashTable.h"
+#include "BinarySearchTree.h"
+
+struct BNode { 
+    string word;
+    int lineNum;
+    bool operator < (BNode otherStruct) const {
+        return ( word < otherStruct.word );
+} 
+};
+
+typedef BinarySearchTree<BNode> BST;
+ostream& operator << (ostream & out, BNode & temp) { 
+    out << temp.word << " " << temp.lineNum; 
+    return out;
+}
+
+void menu(char *argv[], HashTable& dictionary, char& command);
+void buildDictionary (HashTable& dictionary);
+void readFile (int argc, char *argv[], HashTable& dictionary, HashTable& skipped, BinarySearchTree<BNode>& notFound);
+void toLowerCase(string& strIn);
+void rmSymbols(string& strIn);
+void rmNum(string& strIn);
+void menu (string& fileText, int& lineNum, HashTable& skipped, HashTable& dictionary, BinarySearchTree<BNode>& notFound);
+void options (char& command, string& fileText, HashTable& skipped, HashTable& dictionary, int& lineNum, BinarySearchTree<BNode>& notFound);
+void addToDict(string& addWord);
+void writeFile(BinarySearchTree<BNode>& notFound);
+bool dictCheck(string& word, string& suggestion, HashTable& dictionary);
+
+int main(int argc, char *argv[])
+{    
+    HashTable dictionary(700);
+    HashTable skipped(300);
+    BNode nf = {"ZZZ", -1};
+    BinarySearchTree<BNode> notFound(nf);
+    buildDictionary(dictionary);
+    readFile(argc, argv, dictionary, skipped, notFound);
+
+}//End Main()
+
+void buildDictionary(HashTable& dictionary)
+{
+    ifstream dictIn;
+   
+    string dictName = "dict.txt";
+    dictIn.open(dictName.c_str());
+
+    string myText;
+    
+    // Use a while loop together with the getline() function to read the dictionary line by line
+    while (getline (dictIn, myText)) 
+    {
+        dictionary.insert(myText);
+    }
+
+    // Close the dictionary file
+    dictIn.close();
+}//End buildDictionary()
+
+void readFile(int argc, char *argv[], HashTable& dictionary, HashTable& skipped, BinarySearchTree<BNode>& notFound)
+{
+    ifstream fileIn;
+    
+    if (argc == 1)
+    {
+        cout << "\tError -- No Filename Entered!" << endl;
+        exit(1);
+    }
+    string fileName = argv[argc-1];
+    
+    fileIn.open(fileName.c_str());
+    if (!fileIn)
+    {
+        cout << "The File Name included is incorrect\nPlease try again." << endl;
+        exit(1);
+    }
+
+    string lineText, fileText;
+    int lineNum = 1;
+    
+    // Use a while loop to read the target file word by word
+    while (getline(fileIn, lineText)) {
+        // Output the text from the file
+        rmNum(lineText);
+        istringstream iss(lineText);
+        while (iss >> fileText)
+        {
+            toLowerCase(fileText);
+            rmSymbols(fileText);
+            //rmNum(fileText);
+            if (!fileText.empty())
+                if (dictionary.find(fileText) == false )
+                    if (skipped.find(fileText) == false )
+                        menu(fileText, lineNum, skipped, dictionary, notFound);
+        }
+        lineNum++;
+    }
+
+    cout << "\n\n\t***  All Spell Checking Has Now Been Completed ***\n\n\tNow Exiting program...\n" << endl;
+    writeFile(notFound);
+    // Close the dictionary file
+    fileIn.close();
+}//End readFile()
+
+void toLowerCase(string& strIn)
+{
+    int i = 0;
+    //char str[] = strIn;
+    char c;
+    while (strIn[i])
+    {
+        //c = strIn[i];
+        strIn[i] = tolower(strIn[i]);
+        i++;
+    } 
+}//End toLowerCase()
+
+void rmSymbols(string& strIn)
+{
+    for (int i = 0, len = strIn.size(); i < len; i++)
+    {
+        // check whether parsing character is punctuation or not
+        if (ispunct(strIn[i]))
+        {
+            strIn.erase(i--, 1);
+            len = strIn.size();
+        }
+    }
+}//End rmSymbols()
+
+void rmNum(string& strIn)
+{
+    for (int i = 0, len = strIn.size(); i < len; i++)
+    {
+        // check whether parsing character is punctuation or not
+        if (isdigit(strIn[i]))
+        {
+            strIn.erase(i--, 1);
+            len = strIn.size();
+        }
+    }
+}//End rmNum()
+
+void menu(string& fileText, int& lineNum, HashTable& skipped, HashTable& dictionary, BinarySearchTree<BNode>& notFound)
+{
+    char choice;
+    system("clear");
+    cout << "\n\t!@#$%^&*(){} THE SPELL CHECKER PROGRAM !@#$%^&*(){}\n\n\t" << fileText << " On line " << lineNum << " was not found in Dictionary\n" << endl;
+    cout << "\tA) Add the Word To Dictionary" << endl;
+    cout << "\tI) Ignore Word, and Skip Future References" << endl;
+    cout << "\tG) Go On To Next Word" << endl;
+    cout << "\tS) Search For A Suggested Spelling" << endl;
+    cout << "\tQ) Quit Spell Checking File" << endl;
+    do{
+        cout << "\n\tSelection: ";
+        cin >> choice;
+        if (tolower(choice) == 'a' || tolower(choice) == 'i' || tolower(choice) == 'g' || tolower(choice) == 's' || tolower(choice) == 'q')
+            options(choice, fileText, skipped, dictionary, lineNum, notFound);
+        else
+            cout << "\tSelection Error -- Please Try Again" << endl;
+    }while (tolower(choice) != 'a' && tolower(choice) != 'i' && tolower(choice) != 'g' && tolower(choice) != 's' && tolower(choice) != 'q');
+    
+}//End menu()
+
+void options(char& command, string& fileText, HashTable& skipped, HashTable& dictionary, int& lineNum, BinarySearchTree<BNode>& notFound)
+{
+        BNode bN = {fileText, lineNum}, result = notFound.find(bN);
+        string suggestion;
+        switch (tolower(command))
+        {
+            case 'a':
+                    addToDict(fileText);
+                    if (result.word == "ZZZ") 
+                        notFound.insert(bN);
+                    break;
+            case 'i':
+                    skipped.insert(fileText);
+                    if (result.word == "ZZZ") 
+                        notFound.insert(bN);
+            case 'g': 
+                    break;
+            case 's': 
+                    //string
+                    if (dictCheck(fileText, suggestion, dictionary) == true)
+                    {
+                        cout << "\n\tSuggested Spelling: " << suggestion << endl;
+                        cout << "\n\tPlease Hit Return to Continue...";
+                        cin.ignore();
+                        cin.get();
+                    }
+                    else 
+                    {
+                        cout << "\n\tNo Suggested Spellings Found in Dictionary." << endl;
+                        cout << "\n\tPlease Hit Return to Continue...";
+                        cin.ignore();
+                        cin.get();
+                    }
+                    if (result.word == "ZZZ") 
+                        notFound.insert(bN);
+                    break;
+            case 'q': 
+                cout << "\n\tNow Exiting program...\n" << endl;
+                writeFile(notFound);
+                exit(0);
+            
+        }
+}//End optons()
+
+void addToDict(string& addWord)
+{
+    string filename("dict.txt");
+    ofstream file;
+    file.open(filename.c_str(), std::ios::out | std::ios::app);
+    if (file.is_open())
+        file << addWord << endl;
+    file.close();
+}//End addToDict()
+
+void writeFile(BinarySearchTree<BNode>& notFound)
+{
+    ofstream outfile;
+    string fileName = "notfound.txt";
+    
+    outfile.open(fileName.c_str());
+    notFound.printTree(outfile);
+    //outfile.close();
+}//End writeFile()
+
+bool dictCheck(string& word, string& suggestion, HashTable& dictionary)
+{
+    string copy;
+    char x, y, tmp;
+    int i = 0;
+    while (word[i])
+    {
+        copy = word;
+        swap(copy[i], copy[i+1]);
+        if (dictionary.find(copy) == true)  //If the word is found in the dictionary, make suggestion that word and return true
+        {
+            suggestion = copy;
+            return true;
+        }
+        i++;
+    }
+    return false;
+}//End dictCheck()

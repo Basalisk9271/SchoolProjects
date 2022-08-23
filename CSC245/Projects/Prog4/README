@@ -1,0 +1,168 @@
+README.txt
+
+Project 4: Dijkstra's Algorithm
+
+Problem: 
+The problem we needed to solve was to create a program that reads in a list of vertices from a file and converts them into 
+a graph in which Dijkstra's algorithm can be performed on them. When it is finished, table is generated showing the shortest 
+path to each node with the previous node being printed as well.  
+
+SAMPLE INPUT: ginfile1.dat, read in as a command line argument when starting the program
+
+SAMPLE INPUT: The following is a sample input, pulled from a local file called "ginfile1.dat":
+
+Austin;Dallas;200
+Dallas;Austin;200
+Washington;Dallas;1300
+Washington;Atlanta;600
+Atlanta;Washington;600
+Atlanta;Houston;800
+Houston;Atlanta;800
+Denver;Chicago;1000
+Austin;Houston;160
+Chicago;Denver;1000
+Dallas;Chicago;900
+Dallas;Denver;780
+Denver;Atlanta;1400
+
+As one can see, this input is a .dat file comprised of string objects on separate lines of the file. The strings contain the name 
+of the vertex, the destination, and the weight associated with the edge described. 
+ 
+SAMPLE OUTPUT: The following is an example of the output one would receive by running the program. Below is the program ran with "ginfile1.dat" 
+with Washington selected as the starting Vertex
+
+
+        ^^^^^^^^^^^^^^^^    DIJKSTRA'S ALGORITHM    ^^^^^^^^^^^^^^^^
+
+        A Weighted Graph Has Been Built For These 7 Cities: 
+
+            Austin              Dallas          Washington
+            Atlanta             Houston              Denver
+            Chicago
+
+        Please input your starting vertex: A Weighted Graph Has Been Built For These 7 Cities
+        Starting location does not exist...
+        Please input a new starting vertex: Washington
+
+        ----------------------------------------------------------------
+            Vertex            Distance            Previous
+
+        Washington                   0                 N/A
+            Atlanta                 600          Washington
+            Dallas                1300          Washington
+            Houston                1400             Atlanta
+            Austin                1500              Dallas
+            Denver                2080              Dallas
+            Chicago                2200              Dallas
+
+DISCLAIMER: When the program finishes, it'll leave the previous items on the screen. If the program is ran again, it will overwrite 
+the previous display since there is a clear screen command in the menu of the program. 
+
+
+CLASSES:
+
+    dijkstra.cpp:
+        This is the client file and the main driving class for the entire program. It includes all of the algorithm and file reading 
+        functions. It also builds the graph using commands from the Graph.cpp file. This file contains the following functions:
+        
+        void readFile(int argc, char *argv[], Graph<string>& myGraph, vector<string>& v, vector<Node>& nodes, int& items);
+        bool find(vector<string>& v, string& str);
+        void menu( vector<string>& v, int& items, string& begin);
+        int findNode(vector<Node>& v, string& str);
+        int findLowestDist(vector<Node>& v);
+        void dijkstraAlg(Graph<string>& myGraph, Queue<string>& myQ, vector<Node>& nodes, vector<string>& v, string& begin, int& itemNum);
+        void printCitiesMenu(vector<string>& v);
+        void requestStart(vector<string>& v, string& begin, int& items);
+        void printNodes(vector<Node>& nodes);
+
+    graph.h:
+        This class is the specialization class for the Graphs used in the program and it provides a framework for the algorithm implemented in 
+        the client file. This file lists out the prototypes that the implementation file must have in order to use this class. This is also the 
+        location of all of the variables that are public and private, as well as the definitions for the structs used in the implementation 
+        class. It was provided by Dr. Digh. 
+
+    graph.cpp: 
+        This class is the implementation class and defines all of the functions that make up the graph.h file. It has private and public calls 
+        of functions to build graphs, insert edges, delete vertices, and so much more. This file is the reason that we can implement weighted 
+        Graphs in the program. It contains the following functions:
+
+        Graph();         
+        Graph(int maxV);  
+        ~Graph();        
+        void MakeEmpty();
+        bool IsEmpty() const;
+        bool IsFull() const;
+        void AddVertex(VertexType);
+        void AddEdge(VertexType, VertexType, int);
+        int WeightIs(VertexType, VertexType) const;
+        void GetToVertices(VertexType, Queue<VertexType>&) const;
+        void ClearMarks();
+        void MarkVertex(VertexType);
+        bool IsMarked(VertexType) const;
+
+    queue.cpp: 
+        This class is the implementation class and defines all of the functions that make up the queue.h file. It has private and public calls of 
+        functions to build queues, enqueuing items, dequeuing items, clearing the queue, and so much more. This file is the reason that we can implement 
+        Queues in the program. It contains the following functions:
+
+        explicit Queue( int capacity = 10 );
+        bool isEmpty( ) const;
+        bool isFull( ) const;
+        const Object & getFront( ) const;
+        void makeEmpty( );
+        Object dequeue( );
+        void enqueue( const Object & x );
+
+    queue.h: 
+        This class is the specialization class for the Queues used in the program and it provides a framework for the algorithm implemented in 
+        the client file. This file lists out the prototypes that the implementation file must have in order to use this class. This is also the 
+        location of all of the variables that are public and private, as well as the definitions for the structs used in the implementation 
+        class. It was provided by Dr. Digh. 
+
+
+
+FUNCTIONS in dijkstra.cpp: 
+
+    main():
+        This is the main function of the Class and it initializes the Graph, Queue, and Vector objects used throughout the file. This file runs 
+        functions to read file and build graph, present the menu, run dijkstra's algorithm, and then display the nodes from the vector. 
+
+    readFile():
+        This function opens a file stream if the command line argument is valid. It reads the file line by line before entering the vertices 
+        into the graph and adding weighted edges to the graph. This function also adds all of the names of the vertices to a vector to mkae sure 
+        that there are no duplicates. From this vector, we can get the itemNum, or number of vertices entered.  
+
+    menu():
+        This function presents the menu and calls the printCitiesMenu() function in order to print the vertex names that were entered into a vector 
+        in the readFile() function. Then, it calls the requestStart() function to get the starting vertex from the user. 
+
+    find(): 
+        This function takes a string checks to see if there is a mathcing string in the vector that is passed into it. If it finds it, it returns a true. 
+        Otherwise, it returns false. This is used in the readFile() function to find whether a vertex has been entered into the graph before. This 
+        way, no duplicate vertices are entered into the graph. 
+
+    findNode(): 
+        This function takes a vector of Nodes anc checks to see if there  checks to see if there is a node with that vertex name in a list. If it finds 
+        it, then it returns the index of that node. This way, it can be used to find nodes and change values contained in the node with relative ease. 
+
+    findLowestDist():
+        This function takes a vector of Nodes and finds the lowest unmarked distance out of all of the nodes. Then, it returns the index of the lowest 
+        value so that I can use it to select the smallest weight at the end of the dijkstraAlg() function.  
+
+    dijkstraAlg():
+        This function runs dijkstras algorithm to find the smallest distance to all of the vertices in the graph. We talked about it in class and it follows 
+        the same logic. This is the driving function of the program the most difficult to get dialed in. 
+
+    printCitiesMenu():
+        This function takes a vector of strings for the vertex names and it prints them out into columns of three in a nice and neat display. This is 
+        more formatting than anything. 
+
+    requestStart():
+        This function prompts the user for the starting vertex before generating the table for the user. This function is case sensistive and can take 
+        complex strings with Numbers or spaces. Be warned, however, that this function will not let you leave it until you have entered a valid vertex name. 
+
+    printNodes():
+        This function takes a vector of Nodes and prints them out in a consistent matter so that they are nice and neat in the table at the end of the 
+        program. It is the last function to run and is similar to printCitiesMenu() in that it is more formatting than anything. 
+
+

@@ -1,0 +1,162 @@
+README.txt
+
+Project 3: Personnel Database
+
+Problem: Create a program that lets users create and manipulate employee objects within an database 
+with the option to upload objects from a .dat file and download employee objects to the same file. 
+Users can also give pay raises and compute the pay check for each of their employees. Users will be 
+able to choose options from a visual menu that is displayed 
+
+SAMPLE INPUT: "employee.dat"
+
+DISCLAIMER: The following is the contents of "employee.dat" if someone tries to read it. Obviously, 
+we cannot read it, but the computer can. 
+
+��srjava.util.ArrayListx����a�IsizexpwsrHourlyEmployee�D9�S�3
+DwagexEmployee�"Z��EDwageLnametLjava/lang/String;xp@o@t
+                                                       Imlay, Gabe@t�srSalariedEmployeeʗ� �Dsalaryxq~@H ؝�؞t
+                                                                                                            Hynds, Josh@��x[
+
+SAMPLE OUTPUT:
+DISCLAIMER: The output below represents the format that the employee records will be displayed in 
+when called during the printRecord() method
+
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: p
+Imlay, Gabe             $332.75/hour               
+Hynds, Josh             $110000.00/year     
+
+CLASSES:
+
+    Employee:
+        This is an abstract class that is the parent class for SalariedEmployee and HourlyEmployee classes. 
+        Instances of this class store employee names and the employee salary/hourly wage. This Class includes 
+        getters and setters for the Employee names and wage. It also includes an abstract method computePay() 
+        that child classes have to have to return the amount of money that said employee has earned based on 
+        the number of hours they worked that week. 
+
+    SalariedEmployee:
+        This class is built as a child class of Employee and must have the computePay() method to give the 
+        amount of money the the employee has earned based on the hours worked during that week. Salaried 
+        employees only make a fixed amount of money per week regardless of the amount of hours worked. This 
+        class also has a getter and setter for salary and also has an overridden raiseWages() method to raise 
+        the salary by a percentage. Finally, this class includes a toString() method that gets called when the 
+        class gets called in the printRecords() method from Personnel. 
+
+    HourlyEmployee: 
+        This class is built as a child of the Employee and must have the computePay() method to give the amount 
+        of money the employee has earned based on the hours worked during the week. Hourly Employees get paid 
+        a constant hourly rate. In addition, they get paid "time and a half" (1.5x) for hours worked over 40 
+        hours per week. This class also has a getter and setter for the wage and as well as an overidden version 
+        of the raiseWages() method to raise the wage by a percentage. Finally, this class includes a toString() 
+        method that is used when items are called in the printRecords() mothod from the Personnel Class. 
+
+CHOICES: 
+    N - New Employee: 
+        This choice allows the user to create a new Employee object and add it to the 
+        ArrayList that initializes with the start fo the program. User has to enter the name of the new 
+        employee and whether they are trying to create an Hourly Employee or Salaried Employee. Because 
+        it can create employee objects, it utilizes the Employee classes directly. 
+
+    C - Compute Paychecks: 
+        This choice allows the user to enter the number of hours that each employee 
+        has worked that week. It then tells the user how much the employee has earned based on the type of 
+        the employee they are. Hourly employees make "time and a half" after forty hours and Salaried employees 
+        make a fixed amount per week. This choice pulls on the computePay() method that had to be written 
+        into each of the classes of the types of employees. 
+    
+    R - Raise Wages:
+        This choice allows the user to manipulate the wages of the employees in the program ArrayList. This 
+        choice pulls on the raiseWages() method that each of the employee classes have. Here, users are asked 
+        for the percentage that they would like to raise the employee wages by. In turn, this prints out a list 
+        of new wages for all of the employees with active records in the program. 
+    
+    P - Print Records:
+        This choice prints all of the active employee records by pulling them from the Program ArrayList. 
+
+    D - Download Data: 
+        This choice writes all of the active records in the program to an external file names "employee.dat". 
+        This is done by creating an ObjectOutWriter and writing the ArrayList to the file. This choice overwrites 
+        the objects previously stored in the file and replaces them with the ones that are in the program active 
+        records. Since this can overwrite data, any data that needs to be saved must first be uploaded from the 
+        file using the Upload choice. 
+
+    U - Upload Data:
+        This choice reads in the data from the file and adds it to the active records in the Program ArrayList as 
+        employee objects. This works because the classes implement the serializable interface. All of the data is 
+        saved to the object within the array list that is stored on the file. This process is done using a ObjectInWriter 
+        and then typecasting the object to an employee object so that it can be successfully added to the ArrayList 
+        that holds the active records of the program. 
+
+    Q - Quit:
+        This choice has no other purpose than to close the program. It is done by feeding a message to the user 
+        thanking them for using the program before calling "System.exit(0);"
+
+
+METHODS in Personnel Class: 
+
+    main():
+        This is the main method of the Class and it runs a single method that then runs the program
+
+    menu():
+        This method displays the menu and takes user input on which option the user may want to choose. 
+        This method is probably one of the most important ones to get right since it is called many times. 
+        If the choice isn't one of the options listed in the menu, then the program gives an error 
+        and prompts the user to input another choice. This method takes in a string, removes the spaces from 
+        it and matches it to one of the choices from the menu. If it matches, this method returns an int corresponding 
+        with a case in the switch statement found in Choices().        
+
+    Choices(): 
+        This method features a do-while loop with a control value to simulate the program looping back 
+        to the menu every time a sub-program concludes. Inside of the do-while loop is a switch statement 
+        calling other methods based on which choice the user makes.
+
+    addEmployee():
+        This method prompts the user for the name of the new employee object, the type of employee, and 
+        the wage/salary of said employee object. If the user does not input a valid choice, this method 
+        outputs an error message and prompts the user to input a valid choice by utilizing a do-while loop.
+
+    computeCheck():
+        This method prompts the user for the number of hours each employee has worked this week and then calls 
+        the computePay() method for each of the employee objects in the active records. Then, it displays the 
+        amount the employee has earned based on the Employee type. 
+
+    giveRaise():
+        This method prompts the user to enter a percentage that they wish to increase each of their employees 
+        wages by. Then, this method calls the raiseWages() methods from each class depending on te type of 
+        employee each object is before displaying the new wages for the user to see. 
+
+    printRecords():
+        This method uses a for loop and calls the Employee objects from the ArrayList of active records. By doing 
+        this, it calls the toString() of each object and displays the Name of the Employee along with the Salary/Wage 
+        of the employee.
+
+    upload():
+        This method reads in the data from the file and adds it to the active records in the Program ArrayList as 
+        employee objects. This works because the classes implement the serializable interface. All of the data is 
+        saved to the object within the array list that is stored on the file. This process is done using a ObjectInWriter 
+        and then typecasting the object to an employee object so that it can be successfully added to the ArrayList 
+        that holds the active records of the program. 
+ 
+    download():
+        This method writes all of the active records in the program to an external file names "employee.dat". 
+        This is done by creating an ObjectOutWriter and writing the ArrayList to the file. This method overwrites 
+        the objects previously stored in the file and replaces them with the ones that are in the program active 
+        records. Since this can overwrite data, any data that needs to be saved must first be uploaded from the 
+        file using the Upload() method. 
+
+    clearScreen():
+        This method clears the screen when called. It is used a lot throughout other methods because every transition 
+        needed to include it. 
+
+    Line():
+        This method was provided by Dr. Digh and serves to create a line of chars by printing a char a certain number of times. 

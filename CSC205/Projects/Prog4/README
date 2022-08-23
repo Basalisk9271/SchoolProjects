@@ -1,0 +1,154 @@
+README.txt
+
+Project 4: The Job Queue
+
+Problem: Create a program that simulates a processor handling multiple jobs. There can only be one job being worked on at once, 
+the job MUST finish before another job is started, and the jobs must be worked on in the order that they arrived in. This 
+program was supposed to utilize Queues and Linked Lists. 
+SAMPLE INPUT: "employee.dat"
+
+SAMPLE INPUT: The following is a sample input, pulled from a local file called "jobs3.dat"
+
+job1	01	06
+job2	05	09
+job3	06	05
+job4	08	03
+job5	12	07
+job6	15	08
+job7	18	01
+
+As one can see, this input has the job name, expected arrival time, and expected run time seperated by tabs. 
+
+SAMPLE OUTPUT: The following is an example of the output one would receive by running the program using "jobs3.dat".
+The ouput will provide information such as the job name, Arrival time, Start time, Run time, Wait time, and Turnaround time.
+The output will also provide some statistics such as the Average Wait Time, Amount of CPU used, Amount of time the CPU spent 
+idle, and the percentage of Usage to total Idleness and Usage together. The Average wait time is produced by adding up all 
+of the time that programs spent waiting in the program and dividing it by the number of jobs in the program. The amount displayed 
+for CPU Usage is determined by the total of all of the run times for all of the jobs. The amount displayed for CPU Idle is the 
+amount of time the processing method spent with no jobs being worked on because they were still waiting to be queued. The CPU 
+Usage (%) displayed is the percentage of CPU Usage to the total CPU Usage and Idle times. This number reflects how long the 
+CPU actually worked during the duration of the program.
+
+Job Control Analysis: Summary Report 
+
+Job ID          Arrival         Start           Run             Wait            Turnaround
+                time            time            time            time            time
+------          -------         -----           ----            ----            ----------
+job1            1               1               6               0               6
+job2            5               7               9               2               11
+job3            6               16              5               10              15
+job4            8               21              3               13              16
+job5            12              24              7               12              19
+job6            15              31              8               16              24
+job7            18              39              1               21              22
+
+                   Average Wait Time => 10.57
+                           CPU Usage => 39.0
+                            CPU Idle => 0.0
+                       CPU Usage (%) => 100.00%
+
+CLASSES:
+
+    Queue:
+        This class is a class used to define the way that the Queues are built within the program. In this version 
+        of the Queue class, the Queues are built using a circular LinkedList. Because of this, we need to have a 
+        version of the Node class in our directory so that we can actually set up the Linked List. 
+
+    QueueException:
+        This class is a class that extends the RuntimeException class. This class serves to be the way that the 
+        Queues in this program can display error messages if the program crashes or experiences a runtime error. 
+
+    QueueInterface: 
+        This class is an abstract class, as most interface classes are. This class is in charge of adding all of 
+        the things that a Queue must have in this program. for instance, Queue classes built in this class must 
+        have the following methods:
+        isEmpty()
+        enqueue()
+        dequeue()
+        dequeueAll()
+        front()
+
+        All of these methods must do the proper things, or else the queue class will be broken or not  fully working. 
+
+    TimeShare: 
+        This class is the main class in the program and it runs the majority of the processes. It is also the nexus point 
+        of the prgram where all of the classes intermingle and play off of one-another. Within this class, there are the 
+        following methods:
+        main()
+        run()
+        menu()
+        fileAvailable()
+        processJobs()
+        calcStat()
+        inputJobs()
+        printJobs()
+        clearScreen()
+
+        Each of these methods are more finely detailed a little lower in the README;
+
+    Node: 
+        This class is designed to be used in the Queue class because the Queues in this program are made using circular 
+        Linked Lists. As such, the Linked Lists must be created using Node objects, which are detailed in the Node Class.
+        This class is integral to the performance of the program because the queues are integral, and the Node class 
+        dictates how the Queues are allowed to behave. 
+
+    Job: 
+        This class is designed so that the Job items used in the program have certain characteristics such as jobName, 
+        arrivalTime, startTime, runTime, waitTime, and turnTime. These characteristics are meant to be called from places 
+        within the program in order to do some of the calculations and logic functions. Dr. Digh provided this class for us 
+        and made sure that the characteristics were made public so that they might be called at anytime from any part of the 
+        project.
+
+METHODS in TimeShare Class: 
+
+    main():
+        This is the main method of the Class and it runs a single method that then runs the program. This method also uses a try 
+        catch to make sure the user inputs a valid file that is found in the directory of the program. 
+
+    run():
+        This method was created to run the entire program upon being called. As such, this method is essentially the part of the 
+        program that manages the other parts. It calls the other methods in a certain order such that the program runs as smoothly 
+        as possible, making sure to feed in the Queues and variables as arguments where applicable. This method also utilizes the 
+        fileAvailable() method to make sure the user passed the name of the data file in when calling the program. This is a requirement 
+        in order for the program to run. If there is no file available, the program will not run and will present the user with an 
+        error message detailing that no file was selected when calling the program.
+
+    menu():
+        This method displays the menu text of the program, but does nothing further. Unlike previous programs that I've written 
+        for Programming II, this program does not need to have any user input. This program takes the file name as an argument and 
+        pulls the appropriate data from the file. 
+
+    fileAvailable(): 
+        This method features and if-else statement in order to make sure that there was an argument fed into the command line when this 
+        program was called. If there was an argument, then the method returns a true. If there was no argument, then the program returns 
+        false. The run() method uses this method to check to make sure the program does not run if there was not a file selected. 
+
+    processJobs():
+        This method is the main logic hub of the entire program. In this method there are multiple if statements located inside of a while 
+        loop that won't break until the input and job Queues are both empty. Inside of this method, if statements control when the jobs get 
+        moved from the input queue and when finished jobs get moved from the job queue to the output queue. This method also monitors the clock 
+        variable, increasing it while there are jobs that haven't been finished yet. At the end of this method, there is an idle tracker that will 
+        increase if the job queue is empty, but the input queue has unstarted jobs. This will help when he prgram needs to calculate the 
+        percentage CPU Usage and the amount the CPU spent Idle. There are several checks throughout the method to determine if any of the queues 
+        are empty, and the method redirects them if so. 
+
+    calcStat():
+        This method uses the information collected and assigned to each job item throughout to calculate and display the Average Wait time, 
+        Total CPU used, Total CPU idleness, and the CPU Usage percentage. The Precentage is determined to be the percentage of the total CPU 
+        usage to the total of CPU Usage and total CPU Idle combined. THis information is then displayed underneath the menu and jobs that 
+        have been printed. 
+
+    inputJobs():
+        This method takes the file name entered intot he command line when the program was run. It then pulls the relevant information from it 
+        in the form of a string, throws it into an ArrayList, and creates an array out of it. From there, it splits the information into different 
+        elements and creates an ArrayList of the Job objects created from the split strings. This makes it possible to add as many jobs as the user 
+        would like to run without having anything break within the program from an "Array out of bounds" error. After doing this, the processJobs() 
+        method will enqueue all of the job objects from the ArrayList into the input queue.
+
+    printJobs():
+        This method uses takes a Queue as an argument. First, it dequeues the job objects from the argument Queue, putting it into an array list. 
+        Then, prints the Job object from the ArrayList. Finally, it enqueues the opbject fromthe ArrayList back into the argument Queue, leaving 
+        the argument Queue with the same objects that were there when this method started along with preserving the order of said objects. 
+
+    clearScreen():
+        This method clears the screen when called. It is used a single time to clear the screen before displaying all of the text from the menu along with the statistics and the Job objects from the output Queue

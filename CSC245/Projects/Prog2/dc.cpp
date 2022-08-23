@@ -1,0 +1,265 @@
+#include <iostream>
+#include <stdio.h>
+#include "dsexceptions.h"
+#include <string>
+#include "stack.h"
+#include <math.h>
+#include <cctype>
+#include <cstdlib>
+
+using namespace std;
+
+void parse (string& s, string& extra, Stack<int>& operands);
+void operations (char& op, Stack<int>& operands);
+void ChopOperand (string& s, string& extra);
+bool isOperator (char ch);
+void parseNeg (string& s, string& extra, Stack<int>& operands);
+void parsePos (string& s, string& extra, Stack<int>& operands);
+void deleteSpace (string& s);
+
+int main ()
+{
+
+    Stack<int> operands; //Stack that the operands will be thrown into 
+    int num;
+    string line; //String for the input from the user
+    string extra = ""; //Initialization of the string to hold the ends of the input string until it can be read in
+    
+    while (cin) //Allows User to exit using CTRL+D
+    {
+
+        try 
+        {
+            getline(cin, line);
+            if (line.find('.') == string::npos)
+                parse(line, extra, operands);
+            else 
+                throw DataError();
+        }
+        catch (DataError err)
+        {
+            cerr << "Error: Invalid Expression. Input must be integers and operators." << endl;
+        }//Catch for invalid expression errors
+        catch (Overflow err)
+        {
+            cerr << "Error: Stack is full" << endl;
+        }//Catch for overflow errors
+        catch (Underflow err)
+        {
+            cerr << "Error: Stack is empty" << endl;
+        }//Catch for underflow errors
+        catch (DivisionByZero err)
+        {
+            cerr << "Error: Cannot Divide by Zero -- Stack Unchanged" << endl;
+        }//Catch for division by zero errors
+
+    }//End While to take input
+    
+}//End Main()
+
+void parse(string& s, string& extra, Stack<int>& operands)
+{
+    char op; //char for the operations switch statement
+    do{
+        if (isOperator(s[0]) == false)
+        {
+            do {
+                if (s[0] == ' ')
+                {
+                    deleteSpace(s); //Removes space from the string 
+                    //cout << "check3" << endl;
+                }//End if to take care of spaces in string
+                if (s[0] == '_')
+                {
+                    parseNeg(s, extra, operands);
+                    break;
+                }//End if to parse negative numbers
+                if (isdigit(s[0]) == true)
+                {
+                    parsePos(s, extra, operands);
+                    break;
+                }//End if to parse positive numbers
+            }while(s.find_first_of("pnfcdrPNFCDR+-/*% _") != 0 && s.empty() != true); //End do-while
+        }//End if to take in operands 
+        else
+        {
+            if (s[0] == ' ')
+            {
+                deleteSpace(s); //Removes space from the string 
+                //cout << "check4" << endl;
+            }//End if to take care of spaces in string
+            else
+            {
+                op = s[0];
+                s.erase(0,1);
+                //cout << "The operation is: " << op << endl;
+                //cout << "check10" << endl;
+                operations(op, operands);
+                //cout << "check5" << endl;
+            }//End else 
+                
+        }//End else to take in operators
+    }while (s.empty() == false); //End do-while
+
+
+
+}//End parse()
+
+void operations (char& op, Stack<int>& operands)
+{
+    Stack<int> temp (operands);
+    int dupe, a, b, sum;
+    switch (toupper(op))
+        {
+            case 'P':
+                cout << operands.top() << endl;
+                break;
+            case 'N':
+                cout << operands.topAndPop();
+                break;
+            case 'F': 
+                while (temp.isEmpty() == false)
+                {
+                    if (temp.isEmpty() == true)
+                    {
+                        cout << "This is an empty stack; Please enter operands before trying to display the stack." << endl; break;
+                    }                        
+                    cout << temp.topAndPop() << " ";
+                }//End while
+                cout << endl;
+                break;
+            case 'C': 
+                operands.makeEmpty();
+                break;
+            case 'D': 
+                dupe = operands.top();
+                operands.push(dupe);
+                break;
+            case 'R':
+                a = operands.topAndPop();
+                b = operands.topAndPop();
+                operands.push(a);
+                operands.push(b);
+                break;
+            case '+':
+                a = operands.topAndPop();
+                b = operands.topAndPop();
+                sum = a+b;
+                operands.push(sum);
+                break;
+            case '-': 
+                a = operands.topAndPop();
+                b = operands.topAndPop();
+                operands.push(b-a);
+                break;
+            case '*': 
+                a = operands.topAndPop();
+                b = operands.topAndPop();
+                operands.push(b*a);
+                break;
+            case '/': 
+                a = operands.top();
+                if (a != 0)
+                {
+                    a = operands.topAndPop();
+                    b = operands.topAndPop();
+                    operands.push(b/a);
+                }
+                else 
+                {
+                    //operands.push(b);
+                    //operands.push(a);
+                    throw DivisionByZero();
+                }
+                break;
+            case '%': 
+                a = operands.topAndPop();
+                b = operands.topAndPop();
+                operands.push(b%a);
+                break;
+        }//End Switch statement for operations
+}//End operations()
+
+void ChopOperand (string& s, string& extra)
+{
+//Parses through a string s, strips off operand from front, places substring after into extra
+    int length = s.length();  int i;  string first;
+    if (isdigit(s[0]) == true)
+        first += s[0];
+        for (i = 1;  isdigit(s[i]); i++)
+        first += s[i];
+        while (i < s.length())
+        extra += s[i++];
+        s = first;
+}//End ChopOperand()
+
+bool isOperator (char ch)
+{
+    if (isdigit(ch) == true)
+    {
+        return false;
+    }
+    else 
+    {
+        if (ch == ' ')
+        {
+            return false;
+        }
+        else if (ch == '_')
+        {
+            return false;
+        }
+        else 
+        {
+            return true;
+        }
+    }
+
+}//End ChopOperand()
+
+void parseNeg(string& s, string& extra, Stack<int>& operands)
+{
+//Parses through a negative number in the string
+    int num = 0;
+    int length = s.length();  int i;  string first;
+    s = s.substr(1);
+    //cout << "S = " << s << endl;
+    ChopOperand(s, extra);
+    //cout << "Operand = " << atoi(s.c_str()) << "\t\tLeftover String = " << extra << endl;
+    //cout << "check7" << endl;
+                
+    if (operands.isFull() == false)
+    {
+        num = 0 - (atoi(s.c_str()));
+        //cout << "Num = " << num << endl;
+        //cout << "check9" << endl;
+        operands.push(num); //Checks to make sure that the operand is a number greater than zero so it doesn't push 0 to the stack 
+    }  
+    else 
+        throw Overflow();
+    s = extra;
+    extra = "";
+}//End parseNeg()
+
+void parsePos(string& s, string& extra, Stack<int>& operands)
+{
+//Parses through a negative number in the string
+    ChopOperand(s, extra);
+    //cout << "Operand = " << atoi(s.c_str()) << "\t\tLeftover String = " << extra << endl;
+    //cout << "check2" << endl;
+
+    
+    if (operands.isFull() == false)
+        operands.push(atoi(s.c_str())); //Checks to make sure that the operand is a number greater than zero so it doesn't push 0 to the stack 
+    else 
+        throw Overflow();
+    
+    s = extra;
+    extra = "";
+    //cout << "check" << endl;
+}//End parsePos()
+
+void deleteSpace (string& s)
+{
+    s = s.erase(0, 1);
+}//End deleteSpace()

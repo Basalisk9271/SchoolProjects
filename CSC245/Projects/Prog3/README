@@ -1,0 +1,187 @@
+README.txt
+
+Project 3: The Spell Checker
+
+Problem: 
+The problem we needed to solve was to create a spell checker that uses Hash Tables and Binary Search trees to search a dictionary 
+of words and print out the mispelled words to an external file. 
+
+The file to spell check is read. Anytime a word is read that is not in the dictionary, the user should be prompted to :
+(a) Add the word to the dictionary. This will append the word to the end of the dictionary file. 
+(b) Do not add the word to the dictionary, but rather simply ignore it. This will not add the word to the dictionary file, but it  
+    will add it to a hashtable of skipped words that will not be flagged as misspelled again during the duration of the program's 
+    run time. 
+(c) Go on to the next word. This will skip the currently flagged ford, but it will not add it to the dictionary file or any other 
+    hash tables in the program 
+(d) Search for a suggested spelling in the dictionary using the algorithm below. This will use a search algorithm that swaps 
+    adjacent letters until it reaches the end of the flagged word's length. If any suggestions are found in the dictionary, then 
+    it will display the suggestions to the user. If there are no suggestions, then the program will state that there are no 
+    current suggestions. 
+(e) Quit spell checking the file. This option quits the program entirely, displaying an exit message for the user. 
+
+SAMPLE INPUT: myFile.txt
+
+SAMPLE INPUT: The following is a sample input, pulled from a local file called "myFile.txt":
+
+    03-25-21
+
+    Thsi is a fiel that has soem spelling errors.
+
+    Every tiem I hit the keys I egt into troulbe!
+
+    don't worry tiem abuot me thuogh,
+
+    hte end!
+
+As one can see, this input is a plain-text file comprised of string objects on separate lines of the file. The strings can constin 
+numbers and symbols/punctuation, but these things will be removed in the file parsing process. 
+ 
+SAMPLE OUTPUT: The following is an example of the output one would receive by running the program. Below is the first Spell Check 
+prompt for the first flagged word in the document. 
+
+    !@#$%^&*(){} THE SPELL CHECKER PROGRAM !@#$%^&*(){}
+
+    thsi On line 4 was not found in Dictionary
+
+    A) Add the Word To Dictionary
+    I) Ignore Word, and Skip Future References
+    G) Go On To Next Word
+    S) Search For A Suggested Spelling
+    Q) Quit Spell Checking File
+
+    Selection: 
+
+DISCLAIMER: At the end of the program, a plain-text file will be generated so that all of the flagged words are stored in it along 
+with the line numbers that those words were last found on. It would look something like this:
+
+    abuot 8
+    egt 6
+    end 10
+    fiel 4
+    hit 6
+    hte 10
+    keys 6
+    me 8
+    soem 4
+    spelling 4
+    thsi 4
+    thuogh 8
+    tiem 6
+    troulbe 6
+    worry 8
+
+
+CLASSES:
+
+    spellCheck.cpp:
+        This is the client file and the main driving class for the entire program. It includes all of the parsing used to read and 
+        flag words in the file. This file is also home to the struct that was given to us by Dr. Digh so that we could define a 
+        BNode to use in the binsray search tree. It contains the following functions:
+        
+        menu();
+        buildDictionary();
+        readFile();
+        toLowerCase();
+        rmSymbols();
+        rmNum();
+        menu();
+        options();
+        addToDict();
+        writeFile();
+        dictCheck();
+
+    HashTable.h:
+        This class is the specialization class for the Hash Tables. It contains all fo the functions and variables that make up 
+        the hash tables. This file is the reason that I can implement Hash Tables in our program. It contains the following 
+        functions:
+
+        void HashTable::insert(string key)
+        bool HashTable::find(string key)
+        int HashTable::fold(string key)
+        
+    BinarySearchTree.cpp: 
+        This class is the implementation class and defines all of the functions that make up the BinarySearchTree.h file. It has 
+        private and public calls of functions to build trees, insert nodes, delete nodes, find nodes, and so much more. THis file 
+        is the reason that we can implement BinarySearchTrees in the program. It contains the following functions:
+
+        explicit BinarySearchTree( const Comparable & notFound );
+        BinarySearchTree( const BinarySearchTree & rhs );
+        ~BinarySearchTree( );
+
+        const Comparable & findMin( ) const;
+        const Comparable & findMax( ) const;
+        const Comparable & find( const Comparable & x ) const;
+        bool isEmpty( ) const;
+        void printTree(ofstream& outfile ) const;
+
+        void makeEmpty( );
+        void insert( const Comparable & x );
+        void remove( const Comparable & x );
+
+        const BinarySearchTree & operator=( const BinarySearchTree & rhs );
+
+    BinarySearchTree.h: 
+        This class is the specialization class for the BinarySearchTree and it provides a framework for the all of the functions 
+        included in the implementation file. This file lists out the prototypes that the implementation 
+        file must have in order to use this class. This is also the location of all of the variables that 
+        are public and private, as well as the definitions for the structs used in the implementation 
+        class
+
+
+FUNCTIONS in spellCheck.cpp: 
+
+    main():
+        This is the main function of the Class and it initializes the Hash Table, BNode, and Binary Search Tree objects used 
+        throughout the file. Then, this function runs a function to fill the dictionary hashtable and then it runs the readFile() 
+        function to start the program
+
+    buildDictionary():
+        This function contains a file in stream to read in the dictionary file line by line and insert it into the dictionary Hash 
+        Table. 
+
+    readFile():
+        This function contains file in stream to read the file being spell checked in. After opening the file in stream, this 
+        function moves on to readin the file line-by-line. From there, each line is turned into a string stream and read 
+        word-by-word. From there, the program removes all of the sybmbols, numbers, and puncutation. If the word does not match an 
+        entry in the dictionary or skipped hash tables, then it is sent into the menu() function. After each line is fully 
+        processed, then the line number is incremented, which is how the file is able to pull the line number for later methods. 
+
+    toLowerCase(): 
+        This function takes a string and turns every char in the string into the lowercase version of itself, unless it is already 
+        lowercase. If it is already lowercase, it simply leaves the char alone and keeps going through the rest of the string. 
+
+    rmSymbols():
+        This function iterates through the entire string, removing symbols and puncuation from the lines. It works the same way 
+        that the toLowerCase() function works, but removes a char every time it finds a puncuation char.  
+
+    rmNum():
+        This function iterates through the entire string, removing numbers from the lines. It works the same way that the 
+        toLowerCase() function works, but removes a char every time it finds a number char.
+
+    menu():
+        This function creates the menu that the user interacts with. It lists the flagged word, the line it was found on, and the 
+        options shown in the sample output above. Once the user inputs a usable command, it sends the information to the options() 
+        function where the rest of the program runs from. This functions contains the do while loop that will keep the program 
+        running until the proper command is chosen.
+
+    options():
+        This function takes the command entered in the menu() function and sends it to a switch statement. From there, the switch 
+        will execute whichever option the user selected prior in the menu() function. 
+
+    addToDict():
+        This function takes the string that has been flagged and appends it to the end of the dictionary file within the 
+        directory. It usues some reserved statements that make sure that the ostream appends to the end and does not start 
+        overwriting the file completely. This is the function that runs the "Add to dictionary" command from the options() 
+        function. 
+    
+    writeFile():
+        This function takes the BinarySearchTree being used to sort all of the flagged words and uses its built-in method of 
+        printTree() to read out the words that were not found in the dictionary and flagged to start with. This was also shown in 
+        the sample output above. 
+
+    dictCheck():
+        This function takes the string for the word being flagged currently and tries to find it in the dictionary hash table. 
+        This function takes the string and swaps each set of adjacent chars as it iterates through the word. Simultaneously, at 
+        every iteration, this algorithm searches the hash table for the new word formed after the swap. This function is the 
+        backbone for the "Search for a suggested spelling" option that can be selected by the user in the menu() function above. 
+

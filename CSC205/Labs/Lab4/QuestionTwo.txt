@@ -1,0 +1,12 @@
+A) The difference between the size fo an arraylist and the capacity is that size is the current number of 
+objects in the arraylist while the capacity is how many things that the arraylist can hold before the space 
+allocated for it needs to double
+
+B) An arraylist can store as many elements that the user would like to until the computer runs out of RAM; 
+the arraylist's capacity will expand and shrink as needed 
+
+C) You can easily add or remove items from an arraylist without having to run a loop and an arraylist can 
+be created and does not have to have a parameter but can grow however long the user may need it to
+
+D) Arrays have a fixed length that cannot be changed at all. Also, arrays must be homogenous with the same 
+type of object (i.e. an array of strings or an array of ints)

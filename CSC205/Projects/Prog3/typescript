@@ -1,0 +1,207 @@
+Script started on Wed 10 Nov 2021 11:49:03 PM EST
+]0;imlay_ga@cobra:~/Projects/Prog3[?1034h[imlay_ga@cobra Prog3]$ clear[K[K[K[K[Kjava Personnel[9Pclearjava Personnelc Personnel.java
+]0;imlay_ga@cobra:~/Projects/Prog3[imlay_ga@cobra Prog3]$ javac Personnel.java[6P Personnel
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: u
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: p
+Imlay, Gabe		$332.75/hour               
+Hynds, Josh		$110000.00/year            
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: n
+Enter name of new employee: A Digh, Andy
+Hourly (h) or Salaried (s): h
+Enter hourly wage: 1000
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: p
+Imlay, Gabe		$332.75/hour               
+Hynds, Josh		$110000.00/year            
+Digh, Andy		$1000.00/hour               
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: r
+
+Enter percentage increase: 10
+
+New Wages
+---------
+Imlay, Gabe		$366.03/hour               
+Hynds, Josh		$121000.00/year            
+Digh, Andy		$1100.00/hour               
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: c
+
+Enter number of hours worked by Imlay, Gabe: 40
+Pay: $14641.00
+
+Enter number of hours worked by Hynds, Josh: 40
+Pay: $2326.92
+
+Enter number of hours worked by Digh, Andy: 40
+Pay: $44000.00
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: d
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: q
+
+This concludes your Personnel Terminal session. Goodbye
+
+]0;imlay_ga@cobra:~/Projects/Prog3[imlay_ga@cobra Prog3]$ java Personnel
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: u
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: p
+Imlay, Gabe		$366.03/hour               
+Hynds, Josh		$121000.00/year            
+Digh, Andy		$1100.00/hour               
+
+Hit return to continue...
+
+[H[2J
+[H[2J
+----------------------------------
+|Commands: n - New Employee      |
+|          c - Compute Paychecks |
+|          r - Raise Wages       |
+|          p - Print Records     |
+|          d - Download Data     |
+|          u - Upload Data       |
+|          q - Quit              |
+----------------------------------
+
+Enter Command: q
+
+This concludes your Personnel Terminal session. Goodbye
+
+]0;imlay_ga@cobra:~/Projects/Prog3[imlay_ga@cobra Prog3]$ exit
+exit
+
+Script done on Wed 10 Nov 2021 11:50:59 PM EST

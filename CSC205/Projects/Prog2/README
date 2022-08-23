@@ -1,0 +1,140 @@
+README.txt
+
+Project 2: Great Books Search Program
+
+Problem: Create a program that takes an input file full of books (and book information) that the user 
+chooses, sort it alphabetically by title, and give the user three options. The first option runs a smaller 
+program that displays all of the book information where the user can see all of the data associated with 
+the books. This includes the title, author, date of publication, price, and genre. The second option runs 
+another program that allows the user to search for a specific book by title. If the user does not enter the 
+title exactly, then the book will not be displayed. The third option allows the user to exit the program 
+completely with an included exit message. 
+
+SAMPLE INPUT:
+Tom Sawyer;Twain, Mark;1972;8.50;f;
+Leaves of Grass;Whitman, Walt;1975;29.99;p;
+Romeo and Juliet;Shakespeare, William;1980;4.99;d;
+Great Gatsby;Fitzgerald, F. Scott;1979;5.99;f;
+Scarlet Letter;Hawthorne, Nathaniel;1981;4.78;f;
+Whisper of the River;Sams, Ferrol;1984;21.95;f;
+Moby Dick;Melville, Herman;1962;13.98;f;
+Last of the Mohicans;Cooper, James Fenimore;1968;8.75;f;
+Odyssey;Homer;1950;9.99;f;
+Christmas Carol;Dickens, Charles;1966;12.50;f;
+Les Miserables;Hugo, Victor;1988;19.98;f;
+Heart of Darkness;Conrad, Joseph;1970;14.45;f;
+Animal Farm;Orwell, George;1978;10.00;f;
+Canterbury Tales;Chaucer, Geoffrey;1965;20.00;d;
+Old Man and the Sea;Hemingway, Ernest;1966;9.95;f;
+
+SAMPLE OUTPUT:
+DISCLAIMER: The output below represents the format that the book record would be displayed in.
+
+Record #1 :
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Title:                  Animal Farm
+Author's Name:          Orwell, George
+Copyright:              1978
+Price:                  $10.0
+Genre:                  Fiction
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ALGORITHM: 
+    1)Read in the selected file and create an ArrayList of books. If the selected file doesn't exist, the 
+    program will inform the user that there was an error 
+    
+    2)Convert the ArrayList to an Array
+    
+    3)Selection Sort the array of books so the books are in alphabetical order by title
+    
+    4)Using string method split(), split the strings in the Array into book qualities using the delimiter ';'
+    
+    5)Feed the book qualities from step 4 into a for loop to add LibraryBook objects to an ArrayList 
+    so that the books are in aplabetical order by titles and they possess the qualities that were assigned 
+    to each book. 
+    
+    6)At this step, the user picks which choice that they would like to run; display a menu showing the user 
+    the available options 
+    
+    7)If the user chooses option 1, each of the books is displayed like the sample output example, albeit arranged 
+    alphabetical order. The user can proceed at their own pace, since the record is displayed until the user presses 
+    the return key or inputs the letter "M". Once this process is finished, loop back around to the menu
+    
+    8)If the user chooses option 2, a prompt comes up for the user to enter their Seach Terms. The program searches 
+    an Array of titles and, if it finds a record that matches the input, then it will display that record in the same 
+    format as the sample output. If it doesn't find a match, it displays a message saying so before looping back to 
+    the menu. 
+    
+    9)If the user chooses option 3, the program ends and gives a closing message. Any of the options are able to be 
+    chosen any time the menu is shown. They can be chosen in any order. 
+
+METHODS:
+
+    main():
+        This is the main method of the Class and it runs calls a couple methods that run the program
+
+    menu():
+        This method displays the menu and takes user input on which option the user may want to choose. 
+        This method is probably one of the most important ones to get right since it is called many times. 
+        If the choice isn't one of the three options or it isn't an int, then the program gives an error 
+        and prompts the user to input another choice. 
+
+    Choices(): 
+        Thsi method features a do-while loop with a control value to simulate the program looping back 
+        to the menu every time a sub-program concludes. Inside of the do-while loop is a switch statement 
+        calling other methods based on which choice the user makes.
+
+    openFile():
+        This method is the first thing that the user sees upon booting into the program. This method displays 
+        the files available in the current directory. Then, it prompts the user to select a file from the 
+        directory to read from. This is the base of the entire program. If the file is not formatted like it 
+        is suppoed to be, then it will not be able to create the subsequent Arrays and ArrayLists needed in 
+        the other methods. If this method doesn't get called, then no file in read, and the program cannot 
+        display anything. This method returns a string of the file's name.
+
+    inputRecords():
+        This method actually reads the file in to an ArrayList so that the ArrayList can grow or shrink 
+        with the size of the file. Once it is in an ArrayList, it is converted to an Array using the 
+        toArray() method and then it is selection sorted by title. Then, this method displays a message 
+        to the user which gives the number of books tht were created from the file. 
+
+    displayRecord():
+        This method clears the screan and displays the books in alphabetical order on cards shown in the sample 
+        output. Then it allows the user to hit return to advance the cards and hit "M" at anytime to get back 
+        to the menu. The printRecord() method is called inside of a for loop to achieve the formatting of the 
+        book cards
+
+    fillLibArr():
+        This method takes the Array of object read in by the inputRecords() method. Then, using the split() method 
+        on a single string, this method breaks each line down into attributes that are fed into a constructor. This 
+        constructor creates LibraryBook objects which are added to the ArrayList of LibraryBook objects. Since they 
+        were in alphabetical order in the Array created from inputRecords() method, the new ArrayList of LibraryBooks 
+        is also sorted alphabetically. This is how we are able to display the library book information in the 
+        displayRecord() method and in the search() method.
+
+    printRecord():
+        This method contains the formatting for displaying a book record on the screen. This method is also what the 
+        user sees if they are going through option 1, but also if they successfully search an existing book title.
+
+    search():
+        This method has very similar code to the fillLibArr() method because it needs to search for the book title 
+        and display it if it finds it. In this method is a really big if-else statement. By using the binarySearch() 
+        method, this part of the program can search for the user's request against an Array of just titles of all of 
+        the LibraryBook objects. This could not be done if the original list did not get sorted by the inputRecords() 
+        method. This code also feature the same formatting as the printRecord() method with a few of the variables 
+        used being substituted for ones that more accurately pull the book information. If the book is not found, the 
+        program will tell the user and then help the return to the menu.
+
+    clearScreen():
+        This method clears the screen when called. It is used a lot throughout other methods because every transition 
+        needed to include it. 
+        
+    selectionSort():
+        This method is the same selection sort that we covered in class, but it works for strings rather than sorting 
+        numbers. 
+
+    binarySearch():
+        This method is the same binary search that we covered in class, but it is searches an array of Strings for a 
+        String instead of searching an Array of numbers for a number. 

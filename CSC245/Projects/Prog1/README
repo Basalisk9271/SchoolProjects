@@ -1,0 +1,225 @@
+README.txt
+
+Project 1: The Line Editor
+
+Problem: 
+The problem we needed to solve was to create a simple line editor represented by a doubly linked list of
+strings objects. We needed to have a single external pointer for he current line, as well as a header 
+node and footer node that would control the buffer areas of the document. This line editor should be 
+able to read in a file and turn it into a Linked List and write the list to the same file when the user 
+selects exit. This way, it forces the user to save their changes. Using commands in the program called 
+by char objects, the user will be be able to:
+
+- Move up and down in the document using 'P' for the previous line and 'N' for the next line. 
+- Insert a line after the current line using 'I'
+- Delete the current line pointed to by using 'D'
+- Print the entire list using 'L'
+- Exit and save the document back to the source using 'E'
+
+SAMPLE INPUT: testfile.txt
+
+SAMPLE INPUT: The following is a sample input, pulled from a local file called "testfile.txt":
+
+This is my first line
+This is my second line
+This is my third line
+
+As one can see, this input is a plain-text file comprised of string objects on separate lines of the 
+file. The strings can 
+contain any symbols and characters (including spaces and numbers) as the program will take the entire 
+line and add it as a string object. 
+
+SAMPLE OUTPUT: The following is an example of the output one would receive by running the program using 
+"testfile.txt".
+
+The ouput will provide the user with the opportunity to edit the file contents by using commands. This 
+process may look something like the following terminal inputs:
+
+./EDIT testfile
+1> This is my first line.
+2> This is my second line.
+3> This is my third line.
+3> P
+2> I
+3> A brand new line is inserted!
+3> L
+1> This is my first line.
+2> This is my second line.
+3> A brand new line is inserted!
+4> This is my third line.
+3> N
+4> D
+3> D
+2> L
+1> This is my first line.
+2> This is my second line.
+2> E
+
+The following is what testfile would look like after the following commands were called and the changes 
+were saved:
+
+This is my first line.
+This is my second line.
+
+CLASSES:
+
+    editor.cpp:
+        This is the client file and the main driving class for the entire program. It houses the switch 
+        statement which takes commands from the user and the do-while loop to run the program until the 
+        user wants to exit. It has the following functions:
+        
+        options();
+        begin();
+        openFile();
+        readAndBuild();
+        writeFile();
+        enterComm();
+        insert();
+
+    linelist.cpp:
+        This is the implementation file and the secondary driving class for the program. This file has 
+        directly accessed and changes the linked list object. This allows commands to be called from the 
+        client file that change or manipulate the Linked List from this file in whatever ways the users 
+        sees fit. This file includes functions for deleting and inserting objects, getting the 
+        information in those objects, moving back and forth between the objects, and getting the line 
+        numbers and length of the linked list object. This class has the following functions:
+
+        void goToTop();
+        void goToBottom();
+        void insertLine ();
+        void deleteLine ();
+        void printList();
+        void moveNextLine();
+        void movePrevLine();
+        int getCurrLineNum() const;
+        int getLength() const;
+        string getCurrLine() const;
+
+    linelist.h: 
+        This class is the specialization class and it provides a frameword for the all of the functions 
+        included in the implementation file. This file lists out the prototypes that the implementation 
+        file must have in order to use this class. This is also the location of all of the variables that 
+        are public and private, as well as the definitions for the structs used in the implementation 
+        class
+
+
+FUNCTIONS in editor.cpp: 
+
+    main():
+        This is the main function of the Class and it runs a couple lines of code to start the program 
+        running. From there, each of the other functions either call another function inside of them or 
+        they can function by themselves and have a specified purpose. 
+
+    options():
+        This function contains the switch statement used for taking the commands entered in the console 
+        by the user and turning them into actions. This function calls the getComm() function that takes 
+        input in the form of a getline() function from the standard library. This command char is then 
+        passed through to the switch statement. After the switch statement is finshed (which can only be 
+        triggered by the user exiting the program), this function writes the linked list back to the 
+        source file using the writeFile() function. 
+
+    begin():
+        This function serves as a starting point for the program. This function opens an ifstream object 
+        for the file being called. Then, it calls the openFile() function to check whether the file 
+        entered into the command line as an argument can be opened or not. If so, then it feeds that 
+        information back to the ifstream. Then, this function calls the readAndBuild() function that is a 
+        combined file reader and Linked List creator. After creation of the linked list object, this 
+        method checks to see whether the linked list is empty and prints accordingly. Then, the 
+        currentline pointer is sent to the bottom of the linked list by default. 
+
+    openFile(): 
+        This function checks to see if the argument entered by the user was actually entered. If no 
+        filename was included, then the function will return an error message and end the program 
+        entirely with an exit status of exit(1). If the filename was included, it will be passed into the 
+        ifstream object and opened. 
+
+    readAndBuild():
+        This function is a cross between the file reader and linked list creator. THis function reads the 
+        file in line by line before adding it to the linked list object at the same time using commands 
+        created in the linelist.cpp file. After the function is finished reading in all of the lines of 
+        the file, then the ifstream is closed. 
+
+    writeFile():
+        This function opens an ofstream object from the standard library and allows the linked list to be 
+        written to the same source file that was pulled in readAndBuild(). The linked list if read into 
+        the writer line by line until the linked list's pointer does not point to a valid string (i.e. 
+        the buffers before and after the linked list serve as a guide.)
+
+    enterComm():
+        This function takes char commands from the command line and feeds them into the command char that 
+        will be fed into the switch statement in the main program. 
+
+    insert():
+        This function takes a message pulled form the command line in the form of a long string and it 
+        adds it to the Linked List object after the currently pointed to line. It uses the insertLine() 
+        cunstion from linelist.cpp to do this after using a getline() function from the stadard library.
+
+FUNCTIONS in linelist.cpp: 
+
+    LineList():
+        This is the main constructor of the LineList file. It creates and instantiates the variables 
+        whenever a linelist object is created. This is the course of the decalaration for all of the 
+        pointers and where variable initial values get set. 
+
+    goToTop():
+        This function uses a while loop to set the currLine pointer back to the previous node and do this 
+        until it reaches a string buffer. It will only do this if the currLine pointer is not at the 
+        first line already. 
+
+    goToBottom():
+        This function is the opposite of the goToTop() function. This function uses the same while loop 
+        type, but it goes down the linked list by setting currLine to the next node until it hits the 
+        bottom string buffer. This will only happen if the currLine pointer is not currently pointing to 
+        the bottom-most line
+
+    insertLine(): 
+        This function is one of the most important functions as it is the method that wil be used to add 
+        lines into the linked list after the currently pointed to line. This is achieved by creating a 
+        temp pointer, loading the temp pointer and node up with the information of the new sting object, 
+        and then setting it between the currline and next. After doing this, we can then set the temps as 
+        currLine and the next and back of temps as the next and back of the currLine and we will have a 
+        new object added into the spot after the previous currLine but before the next of that previous 
+        currLine, essentially linking the two to this new node. 
+
+    deleteLine():
+        This function is also one of the most important. This function figures out where the currently 
+        pointed to line is and does one of four actions. Thisfunction can delete the top-most node and 
+        shift everything up one, delete the bottom-most node and not shift anything up but the currLine 
+        pointer, delete the currLine node and reset the values of the back and next nodes to point to 
+        each other, or it can give an error if there are no more nodes left to delete. This is the 
+        longest function and has the most options/possible outcomes, meaning it is the most convoluted of 
+        all of the functions. 
+
+    printList():
+        This function is in charge of printing the linelist object byt going all the way to the top of 
+        the object. Then, it shifts the currLine pointer to each consecutive node, printing the 
+        information contained in each along the way. Then, this function returns the currLine pointer 
+        back to the previous location where the user was at before the print call. 
+
+    getCurrLine():
+        This function acts as a const getter function that is not allowed to change any part of the 
+        object, but it can pull the string informaation contained in the node currently being pointed at 
+        by the currLine pointer. 
+
+    moveNextLine():
+        This function is in charge of moving the currLine pointer to the next available node, unless 
+        currLine is pointing to the last line in the linelist. 
+
+    movePrevLine():
+        This function is in charge of moving the currLine pointer to the previously available node, 
+        unless currLine is pointing to the first line in the linelist. 
+
+    getCurrLineNum():
+        This function acts as a const getter function that is not allowed to change any part of the 
+        object, but it can pull the int informaation contained in the currLineNum variable of the 
+        linelist. This variable is in charge of letting the user know which line they are on while using 
+        the program. Each of the other functions change the currLineNum variavble in some form or 
+        fashion, so this function is usefull when setting up a lot of the while loops in linelist.cpp.
+
+    getLength():
+        This function acts as a const getter function that is not allowed to change any part of the 
+        object, but it can pull the int informaation contained in the length variable of the linelist. 
+        This variable is in charge of monitoring the size of the entire linelist object. The insertLine() 
+        and the deleteLine() functions are the only functions in the program with the ability to change 
+        this variable. This makes this function useful when creating some very specifit if statements to 
+        check for certain scenarios in the client file. 

@@ -1,0 +1,202 @@
+README.txt
+
+Project 2: The Postfix Desk Calculator
+
+Problem: 
+The problem we needed to solve was to create a simple, stack-based desk calculator. This calcualtor will take in reverse-polish 
+arguments and use a stack to perform calculations. By Using commands in the program called by char objects, the user will be be 
+able to do the commands listed below. 
+
+Your calculator supports the following functions :
+• p – Prints the value on the top of the stack, without altering the stack. A newline is printed after the value.
+• n – Prints the value on the top of the stack, pops it off, and does not print a newline after. 
+• f – Prints the entire contents of the stack without altering anything. A newline is printed
+    after each value.
+• c – Clears the stack, rendering it empty.
+• d – Duplicates the value on the top of the stack, pushing another copy of it. Thus ‘‘4d*p’’ computes 4 squared 
+    and prints it.
+• r – Reverses the order of (swaps) the top two values on the stack.
+• + – Pops two values off the stack, adds them, and pushes the result.
+• - – Pops two values, subtracts the first one popped from the second one popped, and pushes the result.
+• * – Pops two values, multiplies them, and pushes the result.
+• / – Pops two values, divides the second one popped from the first one popped, and pushes
+    the result.
+• % – Pops two values, computes the remainder of the division that the / command would do, and pushes that.
+• CTRL+D – Ends the program at any time
+
+SAMPLE INPUT: The following is a sample input, which the user must enter themselves:
+
+2 3 +
+p
+6 - p 
+4 6 * + p 
+2 / p 
+4 % p
+2 100 + 
+3 4 5 f 
+5d*p 
+rf2pc
+f 
+CTRL+D
+ 
+SAMPLE OUTPUT: The following is an example of the output one would receive by running the program using 
+the sample input commands:
+
+5
+-1
+23
+11
+3
+5  4  3  102  3
+25
+5 25 4 3 102 3 2
+
+DISCLAIMER: The Desk Calculator parses line-by-line, meaning any commands entered will be run before the user 
+inputs the next line. Because it is this way, the user may not get the sample output exactly. They will get a mixture 
+of command lines and outputs. In actuality, the stream will look like this:
+
+2 3 +
+p
+5
+6 - p
+-1
+4 6 * + p
+23
+2 / p
+11
+4 % p
+3
+2 100 +
+3 4 5 f
+5 4 3 102 3 
+5d*p
+25
+rf2pc
+5 25 4 3 102 3 
+2
+f
+
+CTRL+D
+
+CLASSES:
+
+    dc.cpp:
+        This is the client file and the main driving class for the entire program. It houses the switch statements
+        which take commands from the user and the while loop to run the program until the user wants to exit. It has the 
+        following functions:
+        
+        parse();
+        operations();
+        ChopOperand();
+        isOperator();
+        parseNeg();
+        parsePos();
+        deleteSpace();
+
+    stack.cpp:
+        This is the implementation file and the secondary driving class for the program. This file has 
+        direct access and is able to change the Stack objects created. This allows commands to be called from the 
+        client file that change or manipulate the Stack from this file in whatever ways the users 
+        sees fit. This file includes functions for deleting and inserting objects, and getting the 
+        information in those objects. This class has the following functions:
+
+        bool isEmpty( ) const;
+        bool isFull( ) const;
+        const Object & top( ) const;
+        void makeEmpty( );
+        void pop( );
+        void push( const Object & x );
+        Object topAndPop( );
+
+    stack.h: 
+        This class is the specialization class and it provides a framework for the all of the functions 
+        included in the implementation file. This file lists out the prototypes that the implementation 
+        file must have in order to use this class. This is also the location of all of the variables that 
+        are public and private, as well as the definitions for the structs used in the implementation 
+        class
+
+    dsexceptions.h: 
+        This class is the other specialization class and it provides a framework for the all of the that can be caught 
+        in the client file.
+
+
+FUNCTIONS in dc.cpp: 
+
+    main():
+        This is the main function of the Class nd it initializes the stack objects used throughout the file.
+        Then, this function runs while loop that has a try-catch to give error reports is the user does something 
+        that they are not allowed to do.This while look runs until cin is broken by the USer entering the combination 
+        CTRL+D on their keyboard. 
+
+    parse():
+        This function contains a do-while loop that runs the if-else blocks inside of it until the string parsed is 
+        empty. Then, it breaks and allows the user to input more commands. Inside of these if else statements are calls 
+        to other functions like the parsePos(), parseNeg(), operations() isOperator(), and deleteSpace(). Essentially, 
+        this code is the router for all of the information contained in the string being parsed; it sends the string to 
+        the correct choices so that the user's commands can be processed successfully. 
+
+    operations():
+        This function contains the switch statement for all of the operations. If the string parses something that is 
+        not a number or a negative symbol, parse() checks to see if it needs to call operations(). If it sends it to 
+        operations(), then operations() will check it against a switch statement to see if there is a case and execute 
+        necessary operations. This is the junction where all of the operation are executed for each operator.  
+
+    chopOperand(): 
+        This function was given to us by Dr. Digh and it checks to find the operand on the beginning part of the string and 
+        break it off from the rest of the string, leaving the leftover parts to be thrown back into the program and reparsed. 
+        This function is used a lot throughout both the parsePos() function and the parseNeg() function.  
+
+    isOperator():
+        This function is a boolean function that checks to see if the parsed digit is an operator or operand. This is used as 
+        a control function in a lot of the if-else blocks of the program. 
+
+    parseNeg():
+        This function takes in a the string being worked with and removes the negative symbol ('_') from it. Then it separates 
+        it from the string and subtracts the number from zero, producing the desired negative number. Then it pushes it to the 
+        stack and deletes the number from the string. Then, this function returns to the main parsing loop in parse(). 
+
+    parsePos():
+        This function is a mirror function to parse numbers that are not negative. It separates the number from the string and 
+        pushes it to the stack and deletes the number from the string. Then, this function returns to the main parsing loop in 
+        parse().
+
+    deleteSpace():
+        This function takes the string to be parsed and deletes the space off of the end of it. Really, it deletes the first char 
+        from the front of it, but it is only called when there is a spacwe at the beginning of the string to be parsed, so it only 
+        ever touches the spaces. 
+
+FUNCTIONS in stack.cpp: 
+
+    Stack():
+        This is the main constructor of the Stack file. It creates and instantiates the variables whenever a stack object is 
+        created. This is the decalaration for all of the variable initial values in the stack. 
+
+    isEmpty():
+        This function uses a variable called topOfStack to see if the stack is empty. It returns a boolean valuse depending on 
+        whether topOfStack is equal to -1
+
+    goFull():
+        This function is a mirror function of isEmpty(). This function is also a boolean function that returns whether the topOfStack 
+        variable equals the initialized size of the array for the stack. 
+
+    makeEmpty(): 
+        This function sets the topOfStack variable to -1, making the stack "logically" empty since the class runs its isFull() and 
+        isEmpty() functions from the topOfStack variable. 
+
+    top():
+        This function checks to see if there is anything in the stack before returning the value at the top of the stack. If the stack 
+        is empty, it throws the underflow error.  
+
+    pop():
+        This function checks to see if there is anything in the stack before substracting 1 from the topOfStack variable, reducing the 
+        number of items in the stack and effectively deleting the item on the top of the stack. If the stack is empty, it throws an 
+        underflow error. 
+
+    push():
+        This function checks to see if the stack is full before adding whatever item it took in as an argument to the top of the stack. 
+        If the stack is full, it throws an overflow error.  
+
+    topAndPop():
+        This function is a combination of the top() and pop() functions. This function checks to see if the stack is empty before returning 
+        the item listed at the top of the stack and subtracting 1 from the topOfStack varibale, which "effectively" deletes the top entry of 
+        the stack. 
